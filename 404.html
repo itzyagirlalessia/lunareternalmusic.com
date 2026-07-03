@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Lunar Eternal Music Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#050712;--gold:#C4A35A;--silver:#94A3B8;--text:#EEF2FF;--muted:#4A5568;--border:rgba(196,163,90,0.15)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem}
+    .stars{position:fixed;inset:0;pointer-events:none}
+    .star{position:absolute;border-radius:50%;background:#fff;opacity:0;animation:twinkle var(--d) var(--delay) infinite ease-in-out}
+    @keyframes twinkle{0%,100%{opacity:0}50%{opacity:0.6}}
+    .container{position:relative;z-index:1;max-width:500px}
+    .code{font-family:'Cormorant Garamond',serif;font-size:clamp(6rem,20vw,10rem);font-weight:300;font-style:italic;color:var(--gold);opacity:0.4;line-height:1;margin-bottom:1rem}
+    h1{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;font-style:italic;margin-bottom:0.75rem}
+    p{color:var(--silver);font-weight:300;margin-bottom:2rem}
+    a{display:inline-flex;align-items:center;gap:0.5rem;background:var(--gold);color:var(--bg);padding:0.75rem 2rem;border-radius:100px;font-size:0.9rem;font-weight:700;text-decoration:none;transition:all 0.2s}
+    a:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(196,163,90,0.3)}
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="container">
+    <div class="code">404</div>
+    <h1>Lost in space</h1>
+    <p>This page doesn't exist — but the rest of the universe does.</p>
+    <a href="/">← Back to Earth</a>
+  </div>
+  <script>
+    const s=document.getElementById('stars');
+    for(let i=0;i<100;i++){const el=document.createElement('div');el.className='star';el.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()<0.2?2:1}px;height:${Math.random()<0.2?2:1}px;--d:${2+Math.random()*5}s;--delay:${Math.random()*8}s;`;s.appendChild(el);}
+  </script>
+</body>
+</html>
