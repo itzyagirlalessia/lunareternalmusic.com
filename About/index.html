@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Lunar Eternal Music Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#050712;--surface:#080E22;--card:#0C1330;--gold:#C4A35A;--gold-dim:rgba(196,163,90,0.15);--silver:#94A3B8;--text:#EEF2FF;--muted:#4A5568;--border:rgba(196,163,90,0.15)}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+    .stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+    .star{position:absolute;border-radius:50%;background:#fff;opacity:0;animation:twinkle var(--d) var(--delay) infinite ease-in-out}
+    @keyframes twinkle{0%,100%{opacity:0;transform:scale(0.5)}50%{opacity:0.6;transform:scale(1.1)}}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 3rem;background:rgba(5,7,18,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+    .logo-icon{font-size:1.5rem;color:var(--gold)}
+    .logo-text{display:flex;flex-direction:column}
+    .logo-main{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:0.2em;color:var(--text)}
+    .logo-sub{font-size:0.55rem;letter-spacing:0.25em;color:var(--gold);text-transform:uppercase}
+    .nav-links{display:flex;gap:2rem}
+    .nav-links a{color:var(--silver);text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;transition:color 0.2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--text)}
+    .nav-cta{color:var(--gold);text-decoration:none;font-size:0.85rem;font-weight:600;border:1px solid var(--border);padding:0.45rem 1.2rem;border-radius:100px;transition:all 0.2s}
+    .nav-cta:hover{background:var(--gold-dim);border-color:var(--gold)}
+    .page-hero{position:relative;z-index:1;padding:10rem 2rem 5rem;text-align:center}
+    .page-eyebrow{font-size:0.7rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;opacity:0.8}
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,6rem);font-weight:300;font-style:italic;line-height:1;margin-bottom:1rem}
+    .page-sub{color:var(--silver);font-weight:300;font-size:1rem;max-width:500px;margin:0 auto}
+    .content{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 2rem 6rem}
+    .about-block{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:3rem;margin-bottom:2rem}
+    .about-block h2{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;font-style:italic;color:var(--gold);margin-bottom:1.25rem}
+    .about-block p{color:var(--silver);font-weight:300;line-height:1.9;font-size:1rem;margin-bottom:1rem}
+    .about-block p:last-child{margin-bottom:0}
+    .values-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-top:3rem}
+    .value-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;text-align:center}
+    .value-icon{font-size:2rem;margin-bottom:0.75rem;display:block}
+    .value-title{font-size:0.9rem;font-weight:600;margin-bottom:0.35rem;color:var(--gold)}
+    .value-desc{font-size:0.8rem;color:var(--muted);line-height:1.6}
+    .contact-section{margin-top:4rem}
+    .contact-section h2{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;font-style:italic;margin-bottom:0.5rem}
+    .contact-section p{color:var(--silver);font-weight:300;margin-bottom:2rem}
+    .contact-links{display:flex;gap:1rem;flex-wrap:wrap}
+    .contact-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.8rem 1.8rem;border-radius:100px;font-size:0.9rem;font-weight:600;text-decoration:none;font-family:'Space Grotesk',sans-serif;transition:all 0.2s}
+    .contact-btn.primary{background:var(--gold);color:var(--bg)}
+    .contact-btn.primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(196,163,90,0.3)}
+    .contact-btn.ghost{border:1px solid var(--border);color:var(--text)}
+    .contact-btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+    footer{background:var(--surface);border-top:1px solid var(--border)}
+    .footer-inner{max-width:1200px;margin:0 auto;padding:2rem;display:flex;justify-content:space-between;align-items:center}
+    .footer-copy{font-size:0.78rem;color:var(--muted)}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    @media(max-width:768px){nav{padding:1rem 1.5rem}.nav-links{display:none}.about-block{padding:1.5rem}}
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <nav>
+    <a href="/" class="logo"><span class="logo-icon">☾</span><div class="logo-text"><span class="logo-main">LUNAR ETERNAL</span><span class="logo-sub">Music Group</span></div></a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/artists/">Artists</a>
+      <a href="/releases/">Releases</a>
+      <a href="/about/" class="active">About</a>
+      <a href="/remix-contests/">Contests</a>
+    </div>
+    <a href="#contact" class="nav-cta">Contact</a>
+  </nav>
+  <div class="page-hero">
+    <p class="page-eyebrow reveal">Our story</p>
+    <h1 class="page-title reveal">About the Label</h1>
+    <p class="page-sub reveal">An independent home for artists who dare to reach further.</p>
+  </div>
+  <div class="content">
+    <div class="about-block reveal">
+      <h2>Who We Are</h2>
+      <p>Lunar Eternal Music Group is an independent music label founded in 2024. We exist to give young, emerging talent the platform, leadership, and genuine value they deserve — without the gatekeeping and politics that have held too many artists back for too long.</p>
+      <p>We believe in people before numbers. Our artists aren't roster entries — they're individuals with stories, sounds, and ambitions that we invest in fully. From the first release to the long haul, we're there.</p>
+    </div>
+    <div class="about-block reveal">
+      <h2>What We Stand For</h2>
+      <p>We were built on a simple idea: young talent deserves a real shot. Not just distribution, not just a logo on a release — but actual guidance, creative support, and a network that helps them grow.</p>
+      <p>The music industry can be opaque and exploitative. We chose to be the opposite. Transparent in how we operate, fair in how we work with artists, and genuinely invested in their long-term success.</p>
+    </div>
+    <div class="values-grid reveal">
+      <div class="value-card"><span class="value-icon">🚀</span><div class="value-title">Platform</div><div class="value-desc">We give artists the visibility and infrastructure to launch and grow.</div></div>
+      <div class="value-card"><span class="value-icon">🧭</span><div class="value-title">Leadership</div><div class="value-desc">Real guidance from people who care about the music and the artist behind it.</div></div>
+      <div class="value-card"><span class="value-icon">💎</span><div class="value-title">Value</div><div class="value-desc">Fair deals, honest relationships, and genuine investment in our artists.</div></div>
+      <div class="value-card"><span class="value-icon">🌙</span><div class="value-title">Vision</div><div class="value-desc">Guiding talent beyond the stars — and meaning it.</div></div>
+    </div>
+    <div class="contact-section reveal" id="contact">
+      <h2>Get in Touch</h2>
+      <p>Interested in joining the label, collaborating, or just reaching out? We'd love to hear from you.</p>
+      <div class="contact-links">
+        <a href="mailto:hello@lunareternalmusic.com" class="contact-btn primary">✉ hello@lunareternalmusic.com</a>
+        <a href="https://instagram.com" target="_blank" class="contact-btn ghost">Instagram</a>
+      </div>
+    </div>
+  </div>
+  <footer><div class="footer-inner"><span class="footer-copy">© 2024–2026 Lunar Eternal Music Group</span><span class="footer-copy">Guiding talent beyond the stars.</span></div></footer>
+  <script>
+    const s=document.getElementById('stars');
+    for(let i=0;i<120;i++){const el=document.createElement('div');el.className='star';const size=Math.random()<0.2?2:1;el.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;--d:${2+Math.random()*5}s;--delay:${Math.random()*8}s;`;s.appendChild(el);}
+    const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});},{threshold:0.1});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  </script>
+</body>
+</html>
