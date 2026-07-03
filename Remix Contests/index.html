@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Remix Contests — Lunar Eternal Music Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#050712;--surface:#080E22;--card:#0C1330;--gold:#C4A35A;--gold-dim:rgba(196,163,90,0.15);--silver:#94A3B8;--text:#EEF2FF;--muted:#4A5568;--border:rgba(196,163,90,0.15)}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+    .stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+    .star{position:absolute;border-radius:50%;background:#fff;opacity:0;animation:twinkle var(--d) var(--delay) infinite ease-in-out}
+    @keyframes twinkle{0%,100%{opacity:0;transform:scale(0.5)}50%{opacity:0.6;transform:scale(1.1)}}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 3rem;background:rgba(5,7,18,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none}
+    .logo-icon{font-size:1.5rem;color:var(--gold)}
+    .logo-text{display:flex;flex-direction:column}
+    .logo-main{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;letter-spacing:0.2em;color:var(--text)}
+    .logo-sub{font-size:0.55rem;letter-spacing:0.25em;color:var(--gold);text-transform:uppercase}
+    .nav-links{display:flex;gap:2rem}
+    .nav-links a{color:var(--silver);text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.05em;transition:color 0.2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--text)}
+    .nav-cta{color:var(--gold);text-decoration:none;font-size:0.85rem;font-weight:600;border:1px solid var(--border);padding:0.45rem 1.2rem;border-radius:100px;transition:all 0.2s}
+    .nav-cta:hover{background:var(--gold-dim);border-color:var(--gold)}
+    .page-hero{position:relative;z-index:1;padding:10rem 2rem 5rem;text-align:center}
+    .page-eyebrow{font-size:0.7rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;opacity:0.8}
+    .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,6rem);font-weight:300;font-style:italic;line-height:1;margin-bottom:1rem}
+    .page-sub{color:var(--silver);font-weight:300;font-size:1rem;max-width:500px;margin:0 auto}
+    .content{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 2rem 6rem}
+    .empty-state{text-align:center;padding:6rem 2rem;background:var(--surface);border:1px solid var(--border);border-radius:20px;margin-top:3rem}
+    .empty-icon{font-size:4rem;margin-bottom:1.5rem;display:block}
+    .empty-state h2{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;font-style:italic;margin-bottom:0.75rem}
+    .empty-state p{color:var(--silver);font-weight:300;line-height:1.7;max-width:400px;margin:0 auto 2rem}
+    .notify-btn{display:inline-flex;align-items:center;gap:0.5rem;background:var(--gold);color:var(--bg);padding:0.8rem 2rem;border-radius:100px;font-size:0.9rem;font-weight:700;text-decoration:none;font-family:'Space Grotesk',sans-serif;transition:all 0.2s}
+    .notify-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(196,163,90,0.3)}
+    .how-it-works{margin-top:4rem}
+    .how-it-works h2{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;font-style:italic;margin-bottom:2rem;color:var(--gold)}
+    .steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+    .step{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem}
+    .step-num{font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:var(--gold);opacity:0.4;line-height:1;margin-bottom:0.75rem}
+    .step-title{font-size:0.9rem;font-weight:600;margin-bottom:0.35rem}
+    .step-desc{font-size:0.8rem;color:var(--muted);line-height:1.6}
+    footer{background:var(--surface);border-top:1px solid var(--border)}
+    .footer-inner{max-width:1200px;margin:0 auto;padding:2rem;display:flex;justify-content:space-between;align-items:center}
+    .footer-copy{font-size:0.78rem;color:var(--muted)}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    @media(max-width:768px){nav{padding:1rem 1.5rem}.nav-links{display:none}}
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <nav>
+    <a href="/" class="logo"><span class="logo-icon">☾</span><div class="logo-text"><span class="logo-main">LUNAR ETERNAL</span><span class="logo-sub">Music Group</span></div></a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/artists/">Artists</a>
+      <a href="/releases/">Releases</a>
+      <a href="/about/">About</a>
+      <a href="/remix-contests/" class="active">Contests</a>
+    </div>
+    <a href="/about/#contact" class="nav-cta">Contact</a>
+  </nav>
+  <div class="page-hero">
+    <p class="page-eyebrow reveal">Community</p>
+    <h1 class="page-title reveal">Remix Contests</h1>
+    <p class="page-sub reveal">Show us what you've got. Remix our artists' tracks and get heard.</p>
+  </div>
+  <div class="content">
+    <div class="empty-state reveal">
+      <span class="empty-icon">🎛️</span>
+      <h2>No Active Contests Right Now</h2>
+      <p>We're cooking up something great. Follow us or check back soon to be the first to know when our next remix contest drops.</p>
+      <a href="mailto:hello@lunareternalmusic.com" class="notify-btn">✉ Get Notified</a>
+    </div>
+    <div class="how-it-works reveal">
+      <h2>How It Works</h2>
+      <div class="steps">
+        <div class="step"><div class="step-num">01</div><div class="step-title">Get the Stems</div><div class="step-desc">Download the official stem pack from the active contest page.</div></div>
+        <div class="step"><div class="step-num">02</div><div class="step-title">Make Your Remix</div><div class="step-desc">Take it anywhere — same genre, different genre, your call.</div></div>
+        <div class="step"><div class="step-num">03</div><div class="step-title">Submit</div><div class="step-desc">Upload your remix via the submission form before the deadline.</div></div>
+        <div class="step"><div class="step-num">04</div><div class="step-title">Get Heard</div><div class="step-desc">Winners get released officially on Lunar Eternal Music Group.</div></div>
+      </div>
+    </div>
+  </div>
+  <footer><div class="footer-inner"><span class="footer-copy">© 2024–2026 Lunar Eternal Music Group</span><span class="footer-copy">Guiding talent beyond the stars.</span></div></footer>
+  <script>
+    const s=document.getElementById('stars');
+    for(let i=0;i<120;i++){const el=document.createElement('div');el.className='star';const size=Math.random()<0.2?2:1;el.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;--d:${2+Math.random()*5}s;--delay:${Math.random()*8}s;`;s.appendChild(el);}
+    const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});},{threshold:0.1});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  </script>
+</body>
+</html>
