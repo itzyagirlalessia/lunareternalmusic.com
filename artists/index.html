@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
   <style>
-    :root { --bg:#050712;--surface:#080E22;--card:#0C1330;--gold:#C4A35A;--gold-dim:rgba(196,163,90,0.15);--silver:#94A3B8;--text:#EEF2FF;--muted:#4A5568;--border:rgba(196,163,90,0.15); }
+    :root{--bg:#050712;--surface:#080E22;--card:#0C1330;--gold:#C4A35A;--gold-dim:rgba(196,163,90,0.15);--silver:#94A3B8;--text:#EEF2FF;--muted:#4A5568;--border:rgba(196,163,90,0.15)}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
@@ -35,17 +35,21 @@
     .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,6rem);font-weight:300;font-style:italic;line-height:1;margin-bottom:1rem}
     .page-sub{color:var(--silver);font-weight:300;font-size:1rem;max-width:500px;margin:0 auto}
     .content{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 2rem 6rem}
-    .artist-grid-full{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5rem;margin-top:3rem}
-    .artist-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem 1.5rem;text-align:center;text-decoration:none;color:var(--text);transition:all 0.25s}
+    .artist-grid-full{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem;margin-top:3rem}
+    .artist-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem 1.5rem;text-align:center;transition:all 0.25s}
     .artist-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 12px 40px rgba(196,163,90,0.1)}
-    .artist-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--surface),var(--card));border:1px solid var(--border);margin:0 auto 1.25rem;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:var(--gold)}
+    .artist-avatar{width:100px;height:100px;border-radius:50%;background:var(--card);border:1px solid var(--border);margin:0 auto 1.25rem;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:var(--gold);overflow:hidden}
+    .artist-avatar img{width:100%;height:100%;object-fit:cover}
     .artist-name{font-size:1rem;font-weight:600;margin-bottom:0.35rem}
-    .artist-genre{font-size:0.75rem;color:var(--muted)}
+    .artist-genre{font-size:0.75rem;color:var(--muted);margin-bottom:1rem}
+    .artist-bio{font-size:0.8rem;color:var(--silver);line-height:1.6;margin-bottom:1rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .artist-socials{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap}
+    .social-link{display:inline-flex;align-items:center;padding:0.25rem 0.65rem;border-radius:100px;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);font-size:0.7rem;text-decoration:none;transition:all 0.2s}
+    .social-link:hover{background:rgba(196,163,90,0.25)}
+    .loading-state{text-align:center;padding:4rem;color:var(--muted)}
     footer{background:var(--surface);border-top:1px solid var(--border)}
     .footer-inner{max-width:1200px;margin:0 auto;padding:2rem;display:flex;justify-content:space-between;align-items:center}
     .footer-copy{font-size:0.78rem;color:var(--muted)}
-    .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
-    .reveal.visible{opacity:1;transform:translateY(0)}
     @media(max-width:768px){nav{padding:1rem 1.5rem}.nav-links{display:none}}
   </style>
 </head>
@@ -63,37 +67,77 @@
     <a href="/about/#contact" class="nav-cta">Contact</a>
   </nav>
   <div class="page-hero">
-    <p class="page-eyebrow reveal">The Roster</p>
-    <h1 class="page-title reveal">Our Artists</h1>
-    <p class="page-sub reveal">17 independent voices, one home.</p>
+    <p class="page-eyebrow">The Roster</p>
+    <h1 class="page-title">Our Artists</h1>
+    <p class="page-sub" id="artist-count">Loading roster...</p>
   </div>
   <div class="content">
-    <div class="artist-grid-full">
-      <div class="artist-card reveal"><div class="artist-avatar">Λ</div><div class="artist-name">ΛLΞSS1Λ</div><div class="artist-genre">Dream House · Dream Trance</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">R</div><div class="artist-name">Romee Storm</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">T</div><div class="artist-name">Ty-Dex</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">A</div><div class="artist-name">Alison Woodley</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">S</div><div class="artist-name">Specialneedsmusic</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">R</div><div class="artist-name">Robynson Le Tissier</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">D</div><div class="artist-name">DJ AirshiP</div><div class="artist-genre">Electronic · DJ</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">J</div><div class="artist-name">JAX B€N</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">Z</div><div class="artist-name">zoralyn</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">A</div><div class="artist-name">Amber van Bussem</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">E</div><div class="artist-name">elara.moon</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">L</div><div class="artist-name">Loosley Screws</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">Y</div><div class="artist-name">YXNI</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">F</div><div class="artist-name">figurate</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">D</div><div class="artist-name">Deadly Rose</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">R</div><div class="artist-name">raiyume</div><div class="artist-genre">Electronic</div></div>
-      <div class="artist-card reveal"><div class="artist-avatar">M</div><div class="artist-name">Maddie Grant</div><div class="artist-genre">Electronic</div></div>
+    <div class="artist-grid-full" id="artists-grid">
+      <div class="loading-state">Loading artists...</div>
     </div>
   </div>
   <footer><div class="footer-inner"><span class="footer-copy">© 2024–2026 Lunar Eternal Music Group</span><span class="footer-copy">Guiding talent beyond the stars.</span></div></footer>
+
   <script>
+    const WORKER_URL = 'https://alessia-portal-worker.musicrecordings123.workers.dev';
+
+    // Stars
     const s = document.getElementById('stars');
     for(let i=0;i<120;i++){const el=document.createElement('div');el.className='star';const size=Math.random()<0.2?2:1;el.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;--d:${2+Math.random()*5}s;--delay:${Math.random()*8}s;`;s.appendChild(el);}
-    const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});},{threshold:0.1});
-    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+    async function loadArtists() {
+      try {
+        const res = await fetch(WORKER_URL + '/artists');
+        const artists = await res.json();
+        const grid = document.getElementById('artists-grid');
+        const countEl = document.getElementById('artist-count');
+
+        if (!artists?.length) {
+          grid.innerHTML = '<div class="loading-state">No artists found.</div>';
+          countEl.textContent = 'Roster coming soon.';
+          return;
+        }
+
+        countEl.textContent = `${artists.length} independent voices, one home.`;
+        grid.innerHTML = artists.map(a => {
+          const socials = [
+            a.spotify_url && `<a href="${a.spotify_url}" target="_blank" class="social-link">Spotify</a>`,
+            a.instagram_url && `<a href="${a.instagram_url}" target="_blank" class="social-link">Instagram</a>`,
+            a.youtube_url && `<a href="${a.youtube_url}" target="_blank" class="social-link">YouTube</a>`,
+            a.tiktok_url && `<a href="${a.tiktok_url}" target="_blank" class="social-link">TikTok</a>`,
+            a.soundcloud_url && `<a href="${a.soundcloud_url}" target="_blank" class="social-link">SoundCloud</a>`,
+            a.beatport_url && `<a href="${a.beatport_url}" target="_blank" class="social-link">Beatport</a>`,
+          ].filter(Boolean).join('');
+
+          return `
+            <div class="artist-card">
+              <div class="artist-avatar" id="av-${a.id}">${a.name.charAt(0)}</div>
+              <div class="artist-name">${a.name}</div>
+              ${a.genre ? `<div class="artist-genre">${a.genre}</div>` : ''}
+              ${a.bio ? `<div class="artist-bio">${a.bio}</div>` : ''}
+              ${socials ? `<div class="artist-socials">${socials}</div>` : ''}
+            </div>`;
+        }).join('');
+
+        // Load photos
+        for (const a of artists) {
+          if (!a.photo_key) continue;
+          try {
+            const r = await fetch(`${WORKER_URL}/file/${encodeURIComponent(a.photo_key)}`);
+            if (!r.ok) continue;
+            const blob = await r.blob();
+            const url = URL.createObjectURL(blob);
+            const el = document.getElementById(`av-${a.id}`);
+            if (el) el.innerHTML = `<img src="${url}" alt="${a.name}" />`;
+          } catch(e) {}
+        }
+
+      } catch(e) {
+        document.getElementById('artists-grid').innerHTML = '<div class="loading-state">Could not load artists.</div>';
+      }
+    }
+
+    loadArtists();
   </script>
 </body>
 </html>
