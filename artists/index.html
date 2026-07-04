@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Artists — Lunar Eternal Music Group</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root{--bg:#050712;--surface:#080E22;--card:#0C1330;--gold:#C4A35A;--gold-dim:rgba(196,163,90,0.15);--silver:#94A3B8;--text:#EEF2FF;--muted:#4A5568;--border:rgba(196,163,90,0.15)}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -30,27 +30,52 @@
     .nav-links a:hover,.nav-links a.active{color:var(--text)}
     .nav-cta{color:var(--gold);text-decoration:none;font-size:0.85rem;font-weight:600;border:1px solid var(--border);padding:0.45rem 1.2rem;border-radius:100px;transition:all 0.2s}
     .nav-cta:hover{background:var(--gold-dim);border-color:var(--gold)}
-    .page-hero{position:relative;z-index:1;padding:10rem 2rem 5rem;text-align:center}
+
+    /* Grid view */
+    #grid-view{position:relative;z-index:1}
+    .page-hero{padding:10rem 2rem 5rem;text-align:center}
     .page-eyebrow{font-size:0.7rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;opacity:0.8}
     .page-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,8vw,6rem);font-weight:300;font-style:italic;line-height:1;margin-bottom:1rem}
     .page-sub{color:var(--silver);font-weight:300;font-size:1rem;max-width:500px;margin:0 auto}
-    .content{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 2rem 6rem}
-    .artist-grid-full{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem;margin-top:3rem}
-    .artist-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem 1.5rem;text-align:center;transition:all 0.25s}
+    .content{max-width:1200px;margin:0 auto;padding:0 2rem 6rem}
+    .artist-grid-full{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.5rem;margin-top:3rem}
+    .artist-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem 1.5rem;text-align:center;cursor:pointer;transition:all 0.25s}
     .artist-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 12px 40px rgba(196,163,90,0.1)}
-    .artist-avatar{width:100px;height:100px;border-radius:50%;background:var(--card);border:1px solid var(--border);margin:0 auto 1.25rem;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:var(--gold);overflow:hidden}
+    .artist-avatar{width:90px;height:90px;border-radius:50%;background:var(--card);border:1px solid var(--border);margin:0 auto 1.25rem;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:var(--gold);overflow:hidden}
     .artist-avatar img{width:100%;height:100%;object-fit:cover}
     .artist-name{font-size:1rem;font-weight:600;margin-bottom:0.35rem}
-    .artist-genre{font-size:0.75rem;color:var(--muted);margin-bottom:1rem}
-    .artist-bio{font-size:0.8rem;color:var(--silver);line-height:1.6;margin-bottom:1rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-    .artist-socials{display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap}
-    .social-link{display:inline-flex;align-items:center;padding:0.25rem 0.65rem;border-radius:100px;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);font-size:0.7rem;text-decoration:none;transition:all 0.2s}
-    .social-link:hover{background:rgba(196,163,90,0.25)}
+    .artist-genre{font-size:0.75rem;color:var(--muted)}
+
+    /* Profile view */
+    #profile-view{display:none;position:relative;z-index:1;min-height:100vh}
+    .profile-hero{padding:10rem 2rem 4rem;max-width:1000px;margin:0 auto;display:flex;gap:3rem;align-items:flex-start}
+    .profile-photo{width:180px;height:180px;border-radius:50%;background:var(--card);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:5rem;color:var(--gold);flex-shrink:0;overflow:hidden}
+    .profile-photo img{width:100%;height:100%;object-fit:cover}
+    .profile-info{flex:1;padding-top:1rem}
+    .profile-eyebrow{font-size:0.7rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;opacity:0.8}
+    .profile-name{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:300;font-style:italic;line-height:1;margin-bottom:0.5rem}
+    .profile-genre{font-size:0.9rem;color:var(--silver);margin-bottom:1.5rem}
+    .profile-bio{font-size:0.95rem;color:var(--silver);font-weight:300;line-height:1.9;margin-bottom:2rem;max-width:600px}
+    .profile-socials{display:flex;gap:0.75rem;flex-wrap:wrap}
+    .social-link{display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 1.1rem;border-radius:100px;background:var(--gold-dim);color:var(--gold);border:1px solid var(--border);font-size:0.82rem;text-decoration:none;transition:all 0.2s;font-weight:500}
+    .social-link:hover{background:rgba(196,163,90,0.25);transform:translateY(-1px)}
+    .back-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 1.2rem;border-radius:100px;border:1px solid var(--border);color:var(--silver);text-decoration:none;font-size:0.85rem;transition:all 0.2s;cursor:pointer;background:none;font-family:'Space Grotesk',sans-serif;margin-bottom:2rem}
+    .back-btn:hover{border-color:var(--gold);color:var(--gold)}
+    .profile-content{max-width:1000px;margin:0 auto;padding:0 2rem 6rem}
+
     .loading-state{text-align:center;padding:4rem;color:var(--muted)}
-    footer{background:var(--surface);border-top:1px solid var(--border)}
+    footer{background:var(--surface);border-top:1px solid var(--border);position:relative;z-index:1}
     .footer-inner{max-width:1200px;margin:0 auto;padding:2rem;display:flex;justify-content:space-between;align-items:center}
     .footer-copy{font-size:0.78rem;color:var(--muted)}
-    @media(max-width:768px){nav{padding:1rem 1.5rem}.nav-links{display:none}}
+
+    @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{animation:fadeIn 0.4s ease both}
+
+    @media(max-width:768px){
+      nav{padding:1rem 1.5rem}.nav-links{display:none}
+      .profile-hero{flex-direction:column;gap:1.5rem;padding:8rem 1.5rem 2rem}
+      .profile-photo{width:120px;height:120px;font-size:3rem}
+    }
   </style>
 </head>
 <body>
@@ -66,20 +91,43 @@
     </div>
     <a href="/about/#contact" class="nav-cta">Contact</a>
   </nav>
-  <div class="page-hero">
-    <p class="page-eyebrow">The Roster</p>
-    <h1 class="page-title">Our Artists</h1>
-    <p class="page-sub" id="artist-count">Loading roster...</p>
-  </div>
-  <div class="content">
-    <div class="artist-grid-full" id="artists-grid">
-      <div class="loading-state">Loading artists...</div>
+
+  <!-- Grid View -->
+  <div id="grid-view">
+    <div class="page-hero">
+      <p class="page-eyebrow">The Roster</p>
+      <h1 class="page-title">Our Artists</h1>
+      <p class="page-sub" id="artist-count">Loading roster...</p>
+    </div>
+    <div class="content">
+      <div class="artist-grid-full" id="artists-grid">
+        <div class="loading-state">Loading artists...</div>
+      </div>
     </div>
   </div>
+
+  <!-- Profile View -->
+  <div id="profile-view">
+    <div class="profile-content">
+      <button class="back-btn" onclick="showGrid()">← Back to Artists</button>
+    </div>
+    <div class="profile-hero">
+      <div class="profile-photo" id="profile-photo">—</div>
+      <div class="profile-info">
+        <p class="profile-eyebrow">Lunar Eternal Music Group</p>
+        <h1 class="profile-name" id="profile-name">—</h1>
+        <p class="profile-genre" id="profile-genre"></p>
+        <p class="profile-bio" id="profile-bio"></p>
+        <div class="profile-socials" id="profile-socials"></div>
+      </div>
+    </div>
+  </div>
+
   <footer><div class="footer-inner"><span class="footer-copy">© 2024–2026 Lunar Eternal Music Group</span><span class="footer-copy">Guiding talent beyond the stars.</span></div></footer>
 
   <script>
     const WORKER_URL = 'https://alessia-portal-worker.musicrecordings123.workers.dev';
+    let allArtists = [];
 
     // Stars
     const s = document.getElementById('stars');
@@ -88,39 +136,24 @@
     async function loadArtists() {
       try {
         const res = await fetch(WORKER_URL + '/artists');
-        const artists = await res.json();
+        allArtists = await res.json();
         const grid = document.getElementById('artists-grid');
         const countEl = document.getElementById('artist-count');
-
-        if (!artists?.length) {
+        if (!allArtists?.length) {
           grid.innerHTML = '<div class="loading-state">No artists found.</div>';
           countEl.textContent = 'Roster coming soon.';
           return;
         }
-
-        countEl.textContent = `${artists.length} independent voices, one home.`;
-        grid.innerHTML = artists.map(a => {
-          const socials = [
-            a.spotify_url && `<a href="${a.spotify_url}" target="_blank" class="social-link">Spotify</a>`,
-            a.instagram_url && `<a href="${a.instagram_url}" target="_blank" class="social-link">Instagram</a>`,
-            a.youtube_url && `<a href="${a.youtube_url}" target="_blank" class="social-link">YouTube</a>`,
-            a.tiktok_url && `<a href="${a.tiktok_url}" target="_blank" class="social-link">TikTok</a>`,
-            a.soundcloud_url && `<a href="${a.soundcloud_url}" target="_blank" class="social-link">SoundCloud</a>`,
-            a.beatport_url && `<a href="${a.beatport_url}" target="_blank" class="social-link">Beatport</a>`,
-          ].filter(Boolean).join('');
-
-          return `
-            <div class="artist-card">
-              <div class="artist-avatar" id="av-${a.id}">${a.name.charAt(0)}</div>
-              <div class="artist-name">${a.name}</div>
-              ${a.genre ? `<div class="artist-genre">${a.genre}</div>` : ''}
-              ${a.bio ? `<div class="artist-bio">${a.bio}</div>` : ''}
-              ${socials ? `<div class="artist-socials">${socials}</div>` : ''}
-            </div>`;
-        }).join('');
+        countEl.textContent = `${allArtists.length} independent voices, one home.`;
+        grid.innerHTML = allArtists.map(a => `
+          <div class="artist-card" onclick="showProfile('${a.slug}')">
+            <div class="artist-avatar" id="av-${a.id}">${a.name.charAt(0)}</div>
+            <div class="artist-name">${a.name}</div>
+            ${a.genre ? `<div class="artist-genre">${a.genre}</div>` : ''}
+          </div>`).join('');
 
         // Load photos
-        for (const a of artists) {
+        for (const a of allArtists) {
           if (!a.photo_key) continue;
           try {
             const r = await fetch(`${WORKER_URL}/file/${encodeURIComponent(a.photo_key)}`);
@@ -132,10 +165,72 @@
           } catch(e) {}
         }
 
+        // Check URL hash on load
+        const hash = window.location.hash.replace('#', '');
+        if (hash) showProfile(hash);
+
       } catch(e) {
         document.getElementById('artists-grid').innerHTML = '<div class="loading-state">Could not load artists.</div>';
       }
     }
+
+    async function showProfile(slug) {
+      const artist = allArtists.find(a => a.slug === slug);
+      if (!artist) return;
+
+      window.location.hash = slug;
+      document.getElementById('grid-view').style.display = 'none';
+      const pv = document.getElementById('profile-view');
+      pv.style.display = 'block';
+      pv.classList.add('fade-in');
+      window.scrollTo(0, 0);
+
+      document.getElementById('profile-name').textContent = artist.name;
+      document.getElementById('profile-genre').textContent = artist.genre || '';
+      document.getElementById('profile-bio').textContent = artist.bio || '';
+
+      // Photo
+      const photoEl = document.getElementById('profile-photo');
+      photoEl.innerHTML = artist.name.charAt(0);
+      if (artist.photo_key) {
+        try {
+          const r = await fetch(`${WORKER_URL}/file/${encodeURIComponent(artist.photo_key)}`);
+          if (r.ok) {
+            const blob = await r.blob();
+            photoEl.innerHTML = `<img src="${URL.createObjectURL(blob)}" alt="${artist.name}" />`;
+          }
+        } catch(e) {}
+      }
+
+      // Socials
+      const socials = [
+        artist.spotify_url && `<a href="${artist.spotify_url}" target="_blank" class="social-link">🎵 Spotify</a>`,
+        artist.instagram_url && `<a href="${artist.instagram_url}" target="_blank" class="social-link">📸 Instagram</a>`,
+        artist.youtube_url && `<a href="${artist.youtube_url}" target="_blank" class="social-link">▶ YouTube</a>`,
+        artist.tiktok_url && `<a href="${artist.tiktok_url}" target="_blank" class="social-link">🎵 TikTok</a>`,
+        artist.soundcloud_url && `<a href="${artist.soundcloud_url}" target="_blank" class="social-link">☁ SoundCloud</a>`,
+        artist.beatport_url && `<a href="${artist.beatport_url}" target="_blank" class="social-link">🎛 Beatport</a>`,
+        artist.website_url && `<a href="${artist.website_url}" target="_blank" class="social-link">🌐 Website</a>`,
+      ].filter(Boolean).join('');
+      document.getElementById('profile-socials').innerHTML = socials;
+
+      document.title = `${artist.name} — Lunar Eternal Music Group`;
+    }
+
+    function showGrid() {
+      window.location.hash = '';
+      document.getElementById('profile-view').style.display = 'none';
+      document.getElementById('grid-view').style.display = 'block';
+      document.title = 'Artists — Lunar Eternal Music Group';
+      window.scrollTo(0, 0);
+    }
+
+    // Handle browser back button
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) showProfile(hash);
+      else showGrid();
+    });
 
     loadArtists();
   </script>
