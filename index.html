@@ -290,34 +290,8 @@
     <div class="section-inner">
       <p class="section-label reveal">Catalog</p>
       <h2 class="section-title reveal">Latest Releases</h2>
-      <div class="releases-grid">
-        <a href="/releases/" class="release-card reveal">
-          <div class="release-cover">🌙</div>
-          <div class="release-info">
-            <div class="release-title">Your Love</div>
-            <div class="release-artist">ΛLΞSS1Λ, Robynson Le Tissier, Romee Storm & Alison Woodley</div>
-            <div class="release-meta">June 2026</div>
-            <span class="release-tag">Tech House · Piano House</span>
-          </div>
-        </a>
-        <a href="/releases/" class="release-card reveal">
-          <div class="release-cover">⭐</div>
-          <div class="release-info">
-            <div class="release-title">Starlight Sky</div>
-            <div class="release-artist">ΛLΞSS1Λ</div>
-            <div class="release-meta">2025</div>
-            <span class="release-tag">Dream Trance</span>
-          </div>
-        </a>
-        <a href="/releases/" class="release-card reveal">
-          <div class="release-cover">🔥</div>
-          <div class="release-info">
-            <div class="release-title">Wild Hearts</div>
-            <div class="release-artist">ΛLΞSS1Λ</div>
-            <div class="release-meta">2025</div>
-            <span class="release-tag">Tech House</span>
-          </div>
-        </a>
+      <div class="releases-grid" id="releases-preview">
+        <div style="color:var(--muted);font-size:0.9rem;text-align:center;grid-column:1/-1;padding:2rem">Loading releases...</div>
       </div>
       <div class="section-footer reveal">
         <a href="/releases/" class="btn-ghost">View full catalog →</a>
@@ -414,6 +388,41 @@
     }
 
     loadFeaturedArtists();
+
+    // Load latest releases dynamically
+    async function loadLatestReleases() {
+      try {
+        const res = await fetch(WORKER_URL + '/label-releases');
+        const releases = await res.json();
+        if (!releases?.length) return;
+        const preview = releases.slice(0, 3);
+        const grid = document.getElementById('releases-preview');
+        grid.innerHTML = preview.map(r => `
+          <a href="/releases/" class="release-card reveal">
+            <div class="release-cover" id="hrc-${r.id}">${r.cover_emoji || '🎵'}</div>
+            <div class="release-info">
+              <div class="release-title">${r.title}</div>
+              <div class="release-artist">${r.artists}</div>
+              <div class="release-meta">${r.release_date ? new Date(r.release_date).toLocaleDateString('nl-NL', {month:'long',year:'numeric'}) : ''}</div>
+              ${r.genre ? `<span class="release-tag">${r.genre}</span>` : ''}
+            </div>
+          </a>`).join('');
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+        // Load covers
+        for (const r of preview) {
+          if (!r.cover_key) continue;
+          try {
+            const cr = await fetch(`${WORKER_URL}/file/${encodeURIComponent(r.cover_key)}`);
+            if (!cr.ok) continue;
+            const blob = await cr.blob();
+            const el = document.getElementById(`hrc-${r.id}`);
+            if (el) el.innerHTML = `<img src="${URL.createObjectURL(blob)}" style="width:100%;height:100%;object-fit:cover" />`;
+          } catch(e) {}
+        }
+      } catch(e) {}
+    }
+
+    loadLatestReleases();
     // Scroll reveal
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
