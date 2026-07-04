@@ -186,11 +186,9 @@
       <div class="panel" id="panel-releases">
         <div class="section-header">
           <h2>Releases</h2>
-          <button class="btn-add" onclick="alert('Manage releases in the Artist Portal')">→ Artist Portal</button>
+          <button class="btn-add" onclick="openReleaseModal()">+ Add Release</button>
         </div>
-        <div class="card">
-          <p style="color:var(--muted);font-size:0.9rem">Release management is handled in the <a href="https://itzyagirlalessia.cc/portal/" target="_blank" style="color:var(--gold)">Artist Portal</a>. Go there to add, edit or manage releases and files.</p>
-        </div>
+        <div class="artist-grid" id="releases-list"><div class="loading">Loading...</div></div>
       </div>
 
       <!-- Dashboard Panel -->
@@ -203,6 +201,55 @@
         </div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- Release Modal -->
+<div class="modal-overlay" id="release-modal">
+  <div class="modal">
+    <h2 id="release-modal-title">Add Release</h2>
+    <input type="hidden" id="r-id" />
+
+    <div class="form-group full" style="margin-bottom:1rem">
+      <label>Cover Art</label>
+      <div class="photo-upload" onclick="document.getElementById('cover-input').click()" id="cover-drop">
+        <img id="cover-preview" src="" alt="" style="display:none;width:80px;height:80px;object-fit:cover;border-radius:8px;margin:0 auto" />
+        <span id="cover-icon" style="font-size:2rem">🎵</span>
+        <p id="cover-text">Click to upload cover art</p>
+      </div>
+      <input type="file" id="cover-input" accept="image/*" style="display:none" onchange="previewCover(this)" />
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group full"><label>Title *</label><input type="text" id="r-title" placeholder="Your Love" /></div>
+      <div class="form-group full"><label>Artists *</label><input type="text" id="r-artists" placeholder="ΛLΞSS1Λ, Robynson Le Tissier" /></div>
+      <div class="form-group"><label>Genre</label><input type="text" id="r-genre" placeholder="Tech House" /></div>
+      <div class="form-group"><label>Release Date</label><input type="date" id="r-date" /></div>
+      <div class="form-group"><label>Order</label><input type="number" id="r-order" placeholder="0" /></div>
+      <div class="form-group"><label>Featured?</label>
+        <select id="r-featured">
+          <option value="false">No</option>
+          <option value="true">Yes</option>
+        </select>
+      </div>
+
+      <div class="form-group full" style="border-top:1px solid var(--border);padding-top:1rem;margin-top:0.5rem">
+        <label style="color:var(--gold);margin-bottom:0.75rem">Streaming Links</label>
+      </div>
+      <div class="form-group"><label>Spotify</label><input type="url" id="r-spotify" placeholder="https://open.spotify.com/..." /></div>
+      <div class="form-group"><label>Apple Music</label><input type="url" id="r-apple" placeholder="https://music.apple.com/..." /></div>
+      <div class="form-group"><label>Beatport</label><input type="url" id="r-beatport" placeholder="https://beatport.com/..." /></div>
+      <div class="form-group"><label>YouTube</label><input type="url" id="r-youtube" placeholder="https://youtube.com/..." /></div>
+      <div class="form-group"><label>SoundCloud</label><input type="url" id="r-soundcloud" placeholder="https://soundcloud.com/..." /></div>
+      <div class="form-group"><label>Tidal</label><input type="url" id="r-tidal" placeholder="https://tidal.com/..." /></div>
+      <div class="form-group"><label>Amazon Music</label><input type="url" id="r-amazon" placeholder="https://music.amazon.com/..." /></div>
+      <div class="form-group"><label>Hypeddit / Smart Link</label><input type="url" id="r-hypeddit" placeholder="https://..." /></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('release-modal')">Cancel</button>
+      <button class="btn-save" onclick="saveRelease()">Save Release</button>
     </div>
   </div>
 </div>
@@ -318,6 +365,7 @@
     document.getElementById('panel-' + panel).classList.add('active');
     btn.classList.add('active');
     if (panel === 'artists') loadArtists();
+    if (panel === 'releases') loadReleases();
     if (panel === 'dashboard') loadDashboard();
   }
 
@@ -328,6 +376,151 @@
     document.getElementById('stat-artists').textContent = artists.length;
     document.getElementById('stat-featured').textContent = artists.filter(a => a.featured).length;
     document.getElementById('stat-photos').textContent = artists.filter(a => a.photo_key).length;
+  }
+
+  // ── Releases ──────────────────────────────────────────────
+  let pendingCoverFile = null;
+
+  async function loadReleases() {
+    const releases = await api('GET', '/label-releases');
+    const el = document.getElementById('releases-list');
+    if (!releases?.length) { el.innerHTML = '<div class="loading">No releases yet.</div>'; return; }
+    el.innerHTML = releases.map(r => `
+      <div class="artist-card">
+        <div class="artist-card-top">
+          <div class="artist-photo" id="rcover-${r.id}" style="border-radius:8px;font-size:1.5rem">${r.cover_emoji || '🎵'}</div>
+          <div class="artist-info">
+            <h3>${r.title}</h3>
+            <div class="genre">${r.artists}</div>
+            <div class="genre">${r.genre || ''} ${r.release_date ? '· ' + new Date(r.release_date).toLocaleDateString('nl-NL', {day:'numeric',month:'long',year:'numeric'}) : ''}</div>
+          </div>
+        </div>
+        <div class="artist-socials">
+          ${r.spotify_url ? '<span class="social-tag">Spotify</span>' : ''}
+          ${r.apple_music_url ? '<span class="social-tag">Apple Music</span>' : ''}
+          ${r.beatport_url ? '<span class="social-tag">Beatport</span>' : ''}
+          ${r.youtube_url ? '<span class="social-tag">YouTube</span>' : ''}
+          ${r.soundcloud_url ? '<span class="social-tag">SoundCloud</span>' : ''}
+          ${r.tidal_url ? '<span class="social-tag">Tidal</span>' : ''}
+          ${r.amazon_music_url ? '<span class="social-tag">Amazon</span>' : ''}
+          ${r.hypeddit_url ? '<span class="social-tag">Smart Link</span>' : ''}
+        </div>
+        <div class="card-actions" style="margin-top:1rem">
+          <button class="btn-sm btn-edit" onclick='editRelease(${JSON.stringify(r).replace(/'/g, "&#39;")})'>Edit</button>
+          <button class="btn-sm btn-delete" onclick="deleteRelease('${r.id}', '${r.title}')">Delete</button>
+        </div>
+      </div>`).join('');
+    // Load covers
+    for (const r of releases) {
+      if (!r.cover_key) continue;
+      try {
+        const res = await fetch(`${WORKER_URL}/file/${encodeURIComponent(r.cover_key)}`, { headers: { 'Authorization': `Bearer ${sessionToken}` } });
+        if (!res.ok) continue;
+        const blob = await res.blob();
+        const el = document.getElementById(`rcover-${r.id}`);
+        if (el) el.innerHTML = `<img src="${URL.createObjectURL(blob)}" style="width:100%;height:100%;object-fit:cover;border-radius:8px" />`;
+      } catch(e) {}
+    }
+  }
+
+  function openReleaseModal() {
+    document.getElementById('release-modal-title').textContent = 'Add Release';
+    ['r-id','r-title','r-artists','r-genre','r-date','r-spotify','r-apple','r-beatport','r-youtube','r-soundcloud','r-tidal','r-amazon','r-hypeddit'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('r-order').value = '0';
+    document.getElementById('r-featured').value = 'false';
+    document.getElementById('cover-preview').style.display = 'none';
+    document.getElementById('cover-icon').style.display = 'block';
+    document.getElementById('cover-text').textContent = 'Click to upload cover art';
+    pendingCoverFile = null;
+    document.getElementById('release-modal').classList.add('open');
+  }
+
+  function editRelease(r) {
+    document.getElementById('release-modal-title').textContent = 'Edit Release';
+    document.getElementById('r-id').value = r.id || '';
+    document.getElementById('r-title').value = r.title || '';
+    document.getElementById('r-artists').value = r.artists || '';
+    document.getElementById('r-genre').value = r.genre || '';
+    document.getElementById('r-date').value = r.release_date || '';
+    document.getElementById('r-order').value = r.order_index || 0;
+    document.getElementById('r-featured').value = r.featured ? 'true' : 'false';
+    document.getElementById('r-spotify').value = r.spotify_url || '';
+    document.getElementById('r-apple').value = r.apple_music_url || '';
+    document.getElementById('r-beatport').value = r.beatport_url || '';
+    document.getElementById('r-youtube').value = r.youtube_url || '';
+    document.getElementById('r-soundcloud').value = r.soundcloud_url || '';
+    document.getElementById('r-tidal').value = r.tidal_url || '';
+    document.getElementById('r-amazon').value = r.amazon_music_url || '';
+    document.getElementById('r-hypeddit').value = r.hypeddit_url || '';
+    document.getElementById('cover-preview').style.display = 'none';
+    document.getElementById('cover-icon').style.display = 'block';
+    document.getElementById('cover-text').textContent = r.cover_key ? '✅ Cover uploaded — click to change' : 'Click to upload cover art';
+    pendingCoverFile = null;
+    document.getElementById('release-modal').classList.add('open');
+  }
+
+  function previewCover(input) {
+    const file = input.files[0];
+    if (!file) return;
+    pendingCoverFile = file;
+    const preview = document.getElementById('cover-preview');
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = 'block';
+    document.getElementById('cover-icon').style.display = 'none';
+    document.getElementById('cover-text').textContent = file.name;
+  }
+
+  async function saveRelease() {
+    const id = document.getElementById('r-id').value;
+    const body = {
+      title: document.getElementById('r-title').value,
+      artists: document.getElementById('r-artists').value,
+      genre: document.getElementById('r-genre').value,
+      release_date: document.getElementById('r-date').value || null,
+      order_index: parseInt(document.getElementById('r-order').value) || 0,
+      featured: document.getElementById('r-featured').value === 'true',
+      spotify_url: document.getElementById('r-spotify').value || null,
+      apple_music_url: document.getElementById('r-apple').value || null,
+      beatport_url: document.getElementById('r-beatport').value || null,
+      youtube_url: document.getElementById('r-youtube').value || null,
+      soundcloud_url: document.getElementById('r-soundcloud').value || null,
+      tidal_url: document.getElementById('r-tidal').value || null,
+      amazon_music_url: document.getElementById('r-amazon').value || null,
+      hypeddit_url: document.getElementById('r-hypeddit').value || null,
+    };
+
+    let savedId = id;
+    if (id) {
+      await api('PUT', `/label-releases/${id}`, body);
+    } else {
+      const res = await api('POST', '/label-releases', body);
+      savedId = res?.[0]?.id || res?.id;
+    }
+
+    if (pendingCoverFile && savedId) {
+      const form = new FormData();
+      form.append('file', pendingCoverFile);
+      form.append('releaseId', savedId);
+      const res = await fetch(WORKER_URL + '/release-cover', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${sessionToken}` },
+        body: form,
+      });
+      const data = await res.json();
+      if (data.key) await api('PUT', `/label-releases/${savedId}`, { cover_key: data.key });
+      pendingCoverFile = null;
+    }
+
+    closeModal('release-modal');
+    loadReleases();
+    loadDashboard();
+  }
+
+  async function deleteRelease(id, title) {
+    if (!confirm(`Delete "${title}"?`)) return;
+    await api('DELETE', `/label-releases/${id}`);
+    loadReleases();
+    loadDashboard();
   }
 
   // ── Artists ───────────────────────────────────────────────
