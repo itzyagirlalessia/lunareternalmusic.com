@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lunar Eternal Music Group</title>
-  <meta name="description" content="Guiding talent beyond the stars. Independent music label founded in 2024." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
+  <meta name="description" content="Guiding talent beyond the stars. Independent music label founded in 2024." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg:      #050712;
@@ -268,13 +268,8 @@
       <p class="section-label reveal">The Roster</p>
       <h2 class="section-title reveal">Our Artists</h2>
       <p class="section-subtitle reveal">17 independent voices, one home.</p>
-      <div class="artist-grid">
-        <a href="/artists/" class="artist-card reveal"><div class="artist-avatar">Λ</div><div class="artist-name">ΛLΞSS1Λ</div><div class="artist-genre">Dream House · Dream Trance</div></a>
-        <a href="/artists/" class="artist-card reveal"><div class="artist-avatar">R</div><div class="artist-name">Romee Storm</div><div class="artist-genre">Electronic</div></a>
-        <a href="/artists/" class="artist-card reveal"><div class="artist-avatar">T</div><div class="artist-name">Ty-Dex</div><div class="artist-genre">Electronic</div></a>
-        <a href="/artists/" class="artist-card reveal"><div class="artist-avatar">A</div><div class="artist-name">Alison Woodley</div><div class="artist-genre">Electronic</div></a>
-        <a href="/artists/" class="artist-card reveal"><div class="artist-avatar">R</div><div class="artist-name">Robynson Le Tissier</div><div class="artist-genre">Electronic</div></a>
-        <a href="/artists/" class="artist-card reveal"><div class="artist-avatar">D</div><div class="artist-name">DJ AirshiP</div><div class="artist-genre">Electronic · DJ</div></a>
+      <div class="artist-grid" id="artist-preview">
+        <div style="color:var(--muted);font-size:0.9rem;text-align:center;grid-column:1/-1;padding:2rem">Loading roster...</div>
       </div>
       <div class="section-footer reveal">
         <a href="/artists/" class="btn-ghost">View all 17 artists →</a>
@@ -384,6 +379,41 @@
       el.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;--d:${2+Math.random()*5}s;--delay:${Math.random()*8}s;`;
       s.appendChild(el);
     }
+
+    // Load featured artists dynamically
+    const WORKER_URL = 'https://alessia-portal-worker.musicrecordings123.workers.dev';
+    async function loadFeaturedArtists() {
+      try {
+        const res = await fetch(WORKER_URL + '/artists');
+        const artists = await res.json();
+        if (!artists?.length) return;
+        const featured = artists.filter(a => a.featured).slice(0, 6);
+        const preview = featured.length ? featured : artists.slice(0, 6);
+        const grid = document.getElementById('artist-preview');
+        grid.innerHTML = preview.map(a => `
+          <a href="/artists/#${a.slug}" class="artist-card reveal">
+            <div class="artist-avatar" id="hav-${a.id}">${a.name.charAt(0)}</div>
+            <div class="artist-name">${a.name}</div>
+            ${a.genre ? `<div class="artist-genre">${a.genre}</div>` : ''}
+          </a>`).join('');
+        // Observe new cards
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+        // Load photos
+        for (const a of preview) {
+          if (!a.photo_key) continue;
+          try {
+            const r = await fetch(`${WORKER_URL}/file/${encodeURIComponent(a.photo_key)}`);
+            if (!r.ok) continue;
+            const blob = await r.blob();
+            const url = URL.createObjectURL(blob);
+            const el = document.getElementById(`hav-${a.id}`);
+            if (el) el.innerHTML = `<img src="${url}" alt="${a.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" />`;
+          } catch(e) {}
+        }
+      } catch(e) {}
+    }
+
+    loadFeaturedArtists();
     // Scroll reveal
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
@@ -392,4 +422,3 @@
   </script>
 </body>
 </html>
-<!-- v2 -->
